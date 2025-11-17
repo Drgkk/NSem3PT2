@@ -11,13 +11,11 @@ namespace NSem3PT2
     {
         public double value;
         public QueueNode next;
-        public QueueNode prev;
 
         public QueueNode(double value)
         {
             this.value = value;
             this.next = null;
-            this.prev = null;
         }
 
         public QueueNode(QueueNode vnCopy) : this(vnCopy.value)
@@ -71,11 +69,17 @@ namespace NSem3PT2
         public QueueList(QueueList vlCopy)
         {
             if (vlCopy == null || vlCopy.size == 0) return;
-            QueueNode iter = vlCopy.first;
+            QueueNode iter = vlCopy.last;
+            double[] arr = new double[vlCopy.size];
             for (int i = 0; i < vlCopy.size; i++)
             {
-                Add(iter.value);
+                arr[vlCopy.size - i - 1] = iter.value;
                 iter = iter.next;
+            }
+
+            for (int i = 0; i < vlCopy.size; i++)
+            {
+                Add(arr[i]);
             }
         }
 
@@ -86,15 +90,15 @@ namespace NSem3PT2
             {
                 first = newNode;
                 last = newNode;
-                newNode.next = first;
-                newNode.prev = first;
+            }
+            else if (first != null && (object)last == (object)first)
+            {
+                last = newNode;
+                last.next = first;
             }
             else
             {
-                newNode.next = first;
-                newNode.prev = last;
-                last.next = newNode;
-                first.prev = newNode;
+                newNode.next = last;
                 last = newNode;
             }
             size++;
@@ -109,20 +113,29 @@ namespace NSem3PT2
                 last = null;
                 size--;
                 tempFirst.next = null;
-                tempFirst.prev = null;
                 return tempFirst;
             }
 
-            QueueNode temp = first.next;
-            first.next.prev = last;
-            last.next = first.next;
-            first.next = null;
-            first.prev = null;
+            if (size == 2)
+            {
+                last.next = null;
+                first = last;
+                last = first;
+                size--;
+                return tempFirst;
+            }
+
+            QueueNode temp = last;
+            for (int i = 0; i < size - 2; i++)
+            {
+                temp = temp.next;
+            }
+
+            temp.next = null;
 
             first = temp;
             size--;
             tempFirst.next = null;
-            tempFirst.prev = null;
             return tempFirst;
         }
 
@@ -132,41 +145,29 @@ namespace NSem3PT2
             get
             {
                 if (coord < 0 || coord >= size) throw new IndexOutOfRangeException();
-                QueueNode iter = first;
-                for (int i = 0; i < coord; i++)
+                QueueNode iter = last;
+                for (int i = 0; i < size - coord - 1; i++)
                 {
                     iter = iter.next;
                 }
                 return iter.value;
             }
-            set
-            {
-                if (coord < 0 || coord >= size) throw new IndexOutOfRangeException();
-                QueueNode iter = first;
-                for (int i = 0; i < coord; i++)
-                {
-                    iter = iter.next;
-                }
-
-                iter.value = value;
-            }
         }
 
         public override string ToString()
         {
-            string text = "{";
+            string text = "";
             if (first != null)
             {
-                QueueNode iterNode = first;
+                QueueNode iterNode = last;
                 for (int i = 0; i < size; i++)
                 {
-                    text += iterNode.ToString() + ", ";
+                    text = ", " + iterNode.ToString() + text;
                     iterNode = iterNode.next;
                 }
             }
 
-
-            text += "}";
+            text = "{" + text + "}";
 
             return text;
         }
@@ -178,8 +179,8 @@ namespace NSem3PT2
             if (this.size != vL.size)
                 return false;
             if (this.size == 0 && vL.size == 0) return true;
-            QueueNode thisIterNode = first;
-            QueueNode otherIterNode = vL.first;
+            QueueNode thisIterNode = last;
+            QueueNode otherIterNode = vL.last;
             for (int i = 0; i < size; i++)
             {
                 if (!thisIterNode.Equals(otherIterNode)) return false;
@@ -225,10 +226,6 @@ namespace NSem3PT2
             get
             {
                 return list[coord];
-            }
-            set
-            {
-                list[coord] = value;
             }
         }
 

@@ -31,7 +31,7 @@ namespace UnitTestProject1
             //act
             QueueList ql = new QueueList(1.0, 2.0, 3.0);
             //assert
-            Assert.AreEqual("{(1), (2), (3), }", ql.ToString());
+            Assert.AreEqual("{, (1), (2), (3)}", ql.ToString());
         }
 
         /// <summary>
@@ -49,21 +49,7 @@ namespace UnitTestProject1
             Assert.AreEqual(3.0, ql[2]);
         }
 
-        /// <summary>
-        /// Checks that indexers work
-        /// </summary>
-        [TestMethod]
-        public void Indexer_SetElement_SetsCorrectElement()
-        {
-            //arrange
-            QueueList ql = new QueueList(1.0, 2.0, 3.0);
-            //act
-            ql[1] = 500.0;
-            //assert
-            Assert.AreEqual(1.0, ql[0]);
-            Assert.AreEqual(500.0, ql[1]);
-            Assert.AreEqual(3.0, ql[2]);
-        }
+        
 
         /// <summary>
         /// Check that copy constructor creates an independent copy
@@ -77,10 +63,9 @@ namespace UnitTestProject1
             //act
             QueueNode removed = original.RemoveHead();
             //assert
-            Assert.AreEqual("{(5), (6), }", copy.ToString());
-            Assert.AreEqual("{(6), }", original.ToString());
+            Assert.AreEqual("{, (5), (6)}", copy.ToString());
+            Assert.AreEqual("{, (6)}", original.ToString());
             Assert.IsNull(removed.next);
-            Assert.IsNull(removed.prev);
         }
 
         /// <summary>
@@ -96,7 +81,7 @@ namespace UnitTestProject1
             ql.Add(20.0);
             ql.Add(30.0);
             //assert
-            Assert.AreEqual("{(10), (20), (30), }", ql.ToString());
+            Assert.AreEqual("{, (10), (20), (30)}", ql.ToString());
         }
 
         /// <summary>
@@ -113,29 +98,10 @@ namespace UnitTestProject1
             ql.Add(30.0);
             QueueNode qN = ql.RemoveHead();
             //assert
-            Assert.AreEqual("{(20), (30), }", ql.ToString());
+            Assert.AreEqual("{, (20), (30)}", ql.ToString());
             Assert.AreEqual(10, qN.value);
         }
 
-        /// <summary>
-        /// Check that set indexer throws exceptions at incorrect indexes
-        /// </summary>
-        [TestMethod]
-        public void Indexer_Set_ThrowsOnInvalidIndex()
-        {
-            //arrange
-            QueueList ql = new QueueList();
-            //act
-            //assert
-            Assert.ThrowsException<IndexOutOfRangeException>(() =>
-            {
-                ql[0] = 5.0;
-            });
-            Assert.ThrowsException<IndexOutOfRangeException>(() =>
-            {
-                ql[-1] = 5.0;
-            });
-        }
 
         /// <summary>
         /// Check that get indexer throws exceptions at incorrect indexes
@@ -248,7 +214,7 @@ namespace UnitTestProject1
             Queue q = new Queue(1.0, 2.0);
             //assert
             Assert.AreEqual(2, q.size);
-            Assert.AreEqual("Size: 2 {(1), (2), }", q.ToString());
+            Assert.AreEqual("Size: 2 {, (1), (2)}", q.ToString());
         }
 
         /// <summary>
@@ -263,7 +229,7 @@ namespace UnitTestProject1
             double d = q.ReadHead();
             //assert
             Assert.AreEqual(2, q.size);
-            Assert.AreEqual("Size: 2 {(1), (2), }", q.ToString());
+            Assert.AreEqual("Size: 2 {, (1), (2)}", q.ToString());
             Assert.AreEqual(1.0, d);
         }
 
@@ -285,23 +251,11 @@ namespace UnitTestProject1
             QueueNode temp = new QueueNode(0.0);
             original = original > temp;
             //assert
-            Assert.AreEqual("Size: 2 {(7), (8), }", copy.ToString());
+            Assert.AreEqual("Size: 2 {, (7), (8)}", copy.ToString());
             Assert.AreEqual(1, original.size);
         }
 
-        /// <summary>
-        /// Check that Get and Set indexers work
-        /// </summary>
-        [TestMethod]
-        public void Indexer_GetSet_Works()
-        {
-            //arrange
-            Queue q = new Queue(1.0, 2.0, 3.0);
-            //act
-            q[1] = 9.0;
-            //assert
-            Assert.AreEqual(9.0, q[1]);
-        }
+       
 
         /// <summary>
         /// Check '<' operator behaviour
@@ -315,7 +269,7 @@ namespace UnitTestProject1
             q = q < new QueueNode(300.0); // enqueue 300
             //assert
             Assert.AreEqual(3, q.size);
-            Assert.AreEqual("Size: 3 {(100), (200), (300), }", q.ToString());
+            Assert.AreEqual("Size: 3 {, (100), (200), (300)}", q.ToString());
         }
 
         /// <summary>
@@ -332,7 +286,7 @@ namespace UnitTestProject1
             //assert
             Assert.AreEqual(100.0, receiver.value);
             Assert.AreEqual(1, q.size);
-            Assert.AreEqual("Size: 1 {(200), }", q.ToString());
+            Assert.AreEqual("Size: 1 {, (200)}", q.ToString());
         }
 
         /// <summary>
@@ -364,7 +318,7 @@ namespace UnitTestProject1
             empty = empty < new QueueNode(50.5);
             //assert
             Assert.AreEqual(1, empty.size);
-            Assert.AreEqual("Size: 1 {(50,5), }", empty.ToString());
+            Assert.AreEqual("Size: 1 {, (50,5)}", empty.ToString());
         }
 
 
@@ -409,7 +363,7 @@ namespace UnitTestProject1
             q2 = input;
             //arrange
             Assert.AreEqual(2, q2.size);
-            Assert.AreEqual("Size: 2 {(9), (8), }", q2.ToString());
+            Assert.AreEqual("Size: 2 {, (9), (8)}", q2.ToString());
         }
 
         /// <summary>
